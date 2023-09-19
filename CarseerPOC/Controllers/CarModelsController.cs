@@ -1,6 +1,7 @@
 ﻿using CarseerPOC.DomainClasses;
 using CarseerPOC.Repo;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.Threading.Tasks;
 
 namespace CarseerPOC.Controllers
@@ -11,10 +12,14 @@ namespace CarseerPOC.Controllers
     {
         #region Const
         private readonly ICarsDetailsRepo _ICarsDetailsRepo;
+        private readonly IStringLocalizer<CarModelsController> _localizer;
 
-        public CarModelsController(ICarsDetailsRepo ICarsDetailsRepo)
+        public CarModelsController(ICarsDetailsRepo ICarsDetailsRepo,
+            IStringLocalizer<CarModelsController> localizer)
         {
             _ICarsDetailsRepo = ICarsDetailsRepo;
+            _localizer = localizer;
+
         }
         #endregion
 
@@ -35,18 +40,16 @@ namespace CarseerPOC.Controllers
                 long MakeId = _ICarsDetailsRepo.GetMakeId(Make);
 
                 if (MakeId == 0)
-                    return BadRequest("Car Make Not Found.");
+                    return BadRequest(new { StatusID = -1, StatusDescrition = _localizer["CarMakeNotFound"].Value });
 
                 // To get all models of the selected car type
                 var CarModels = await _ICarsDetailsRepo.GetCarModels(MakeId, ModelYear);
 
                 if (CarModels == null || CarModels.Count == 0)
-                    return NotFound("No Car Models Found For The Given Make And Year.");
+                    return NotFound(new { StatusID = -2, StatusDescrition = _localizer["NoCarModels"].Value });
 
-                return Ok(new CarsModelsResponse
+                return Ok(new 
                 {
-                    Make = Make,
-                    Year = ModelYear,
                     Models = CarModels.Results
                 });
             }

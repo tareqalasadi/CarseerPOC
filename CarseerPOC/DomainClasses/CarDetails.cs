@@ -2,12 +2,6 @@
 
 namespace CarseerPOC.DomainClasses
 {
-    public class CarsModelsResponse
-    {
-        public string Make { get; set; }
-        public long Year { get; set; }
-        public List<Result> Models { get; set; }
-    }
     public class Result
     {
         public string Make_Name { get; set; }
