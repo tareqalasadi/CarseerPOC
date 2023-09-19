@@ -27,7 +27,7 @@ namespace CarseerPOC.Repo
             if (!string.IsNullOrEmpty(MakeName))
             {
 
-                var csvFilePath = AppDomain.CurrentDomain.BaseDirectory + _IConfiguration["csvFilePath"];
+                var csvFilePath = _IConfiguration["csvFilePath"];
                 using (var reader = new StreamReader(csvFilePath))
                 using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)))
                 {
